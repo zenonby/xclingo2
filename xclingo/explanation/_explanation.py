@@ -19,7 +19,7 @@ class Explanation:
 
             if parent_item is None:
                 parent_item = (
-                    ExplanationRoot(explanation_atoms=symbols)
+                    ExplanationRoot(explanation_atoms=[])
                     if parent == "root"
                     else ExplanationNode()
                 )
@@ -85,7 +85,12 @@ class Explanation:
 class ExplanationRoot(Explanation):
     def __init__(self, causes=None, explanation_atoms=None):
         self.causes = list() if causes is None else causes
-        self._explanation_atoms = explanation_atoms
+        # NOTE: Do not retain the raw `symbols` list. It holds clingo Symbol
+        # wrappers that reference C-level AST objects. Keeping them alive past
+        # the Control's teardown creates a reference cycle that triggers a
+        # use-after-free in AST.__del__ (self._rep already None). We only need
+        # the labels for tree construction, which are stored separately.
+        self._explanation_atoms = list(explanation_atoms) if explanation_atoms else []
 
     def get_node_text(self):
         return "  *"

@@ -14,7 +14,7 @@ requires-python = ">=3.8"
 license = { text = "MIT" }
 
 authors = [
-    { name = "Brais Muñiz", email = "mc.brais@gmail.com" }
+    { name = "Brais Muniz Castro", email = "mc.brais@gmail.com" }
 ]
 
 keywords = [
